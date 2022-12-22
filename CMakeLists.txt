@@ -6,7 +6,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(CMAKE_PREFIX_PATH "D:/Soft/Qt/6.2.4/mingw_64")
+set(CMAKE_PREFIX_PATH "D:/Soft/Qt/6.2.4/msvc2019_64")
 
 find_package(Qt6 COMPONENTS
         Core
@@ -14,7 +14,7 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 
-add_executable(SMO main.cpp include/main_window.h source/main_window.cpp include/InputField.h source/InputField.cpp source/logger.cpp include/Logger.h include/config.h include/types.h include/common.h)
+add_executable(SMO WIN32 main.cpp include/main_window.h source/main_window.cpp include/InputField.h source/InputField.cpp source/logger.cpp include/Logger.h include/config.h include/types.h include/common.h solution/solution_base.cpp solution/solution_base.h)
 target_link_libraries(SMO
         Qt::Core
         Qt::Gui

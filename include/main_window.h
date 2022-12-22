@@ -28,6 +28,8 @@ class MainWindow : public QWidget {
   field::InputField* m_time_input;
   // кол-во потоков
   field::InputField* m_count_stream;
+  // размер очереди
+  field::InputField* m_queue_size;
   // buttons
   QPushButton* m_btn_decision;
 };

@@ -14,11 +14,12 @@ MainWindow::MainWindow(QWidget* parent) {
   m_lambda_input = new field::InputField(tr("Заявок в минуту"));
   m_time_input = new field::InputField(tr("Время обработки"));
   m_count_stream = new field::InputField(tr("Кол-во потоков"));
+  m_queue_size = new field::InputField(tr("Размер очереди"));
 
 #ifdef QT_DEBUG
-  m_lambda_input->SetText("1.9");
-  m_time_input->SetText("2.1");
-  m_count_stream->SetText("4");
+//  m_lambda_input->SetText("1.9");
+//  m_time_input->SetText("2.1");
+//  m_count_stream->SetText("4");
 #endif
 
   m_btn_decision = new QPushButton("Решить");
@@ -26,6 +27,7 @@ MainWindow::MainWindow(QWidget* parent) {
   m_vbox->addLayout(m_lambda_input->GetLayout());
   m_vbox->addLayout(m_time_input->GetLayout());
   m_vbox->addLayout(m_count_stream->GetLayout());
+//  m_vbox->addLayout(m_queue_size->GetLayout());
   m_vbox->addWidget(m_btn_decision);
   setLayout(m_vbox);
 
@@ -51,6 +53,7 @@ void MainWindow::StartDecision() {
   auto lambda_data = m_lambda_input->GetText();
   auto time_data = m_time_input->GetText();
   auto count_stream_data = m_count_stream->GetText();
+  auto queue_size = m_queue_size->GetText();
 
   m_logger->WriteLine("lambda = " + lambda_data);
   m_logger->WriteLine("time of processing = " + time_data);

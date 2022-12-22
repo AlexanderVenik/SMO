@@ -6,7 +6,7 @@
 
 namespace config {
 
-static QFont MAIN_FONT("Courier New", 14);
+static QFont MAIN_FONT("Roboto", 14);
 static QSize SIZE_LOGGER(600, 700);
 
 }
