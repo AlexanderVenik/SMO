@@ -7,8 +7,8 @@
 #include <QWindow>
 #include <array>
 
-MainWindow::MainWindow(QWidget* parent) {
-  setWindowTitle("Системы массового обслуживания");
+MainWindow::MainWindow(QApplication& app) : m_app(app) {
+  setWindowTitle("Системы массового обслуживания с отказами");
   m_vbox = new QVBoxLayout();
 
   m_lambda_input = new field::InputField(tr("Заявок в минуту"));
@@ -17,9 +17,9 @@ MainWindow::MainWindow(QWidget* parent) {
   m_queue_size = new field::InputField(tr("Размер очереди"));
 
 #ifdef QT_DEBUG
-//  m_lambda_input->SetText("1.9");
-//  m_time_input->SetText("2.1");
-//  m_count_stream->SetText("4");
+  m_lambda_input->SetText("1.9");
+  m_time_input->SetText("2.1");
+  m_count_stream->SetText("4");
 #endif
 
   m_btn_decision = new QPushButton("Решить");
@@ -27,14 +27,13 @@ MainWindow::MainWindow(QWidget* parent) {
   m_vbox->addLayout(m_lambda_input->GetLayout());
   m_vbox->addLayout(m_time_input->GetLayout());
   m_vbox->addLayout(m_count_stream->GetLayout());
-//  m_vbox->addLayout(m_queue_size->GetLayout());
+  //  m_vbox->addLayout(m_queue_size->GetLayout());
   m_vbox->addWidget(m_btn_decision);
   setLayout(m_vbox);
 
   m_logger = new logger::Logger();
   // connects
-  connect(m_btn_decision, SIGNAL(clicked(bool)),
-          this, SLOT(StartDecision()));
+  connect(m_btn_decision, SIGNAL(clicked(bool)), this, SLOT(StartDecision()));
   // all show
   show();
 }
@@ -72,8 +71,10 @@ void MainWindow::StartDecision() {
                       QString::number(p));
 
   f64 temp_p0 = 0;
-  for (u8 idx_stream = 1; idx_stream <= count_stream; ++idx_stream) {
-    temp_p0 += std::pow(p, idx_stream) / math::factorial(idx_stream);
+  for (u64 idx_stream = 1; idx_stream <= count_stream; ++idx_stream) {
+    auto factorial = static_cast<double>(math::factorial(idx_stream));
+    auto pow = std::pow(p, static_cast<double>(idx_stream));
+    temp_p0 += pow / factorial;
   }
 
   f64 p0 = 1 / (1 + temp_p0);
@@ -81,16 +82,18 @@ void MainWindow::StartDecision() {
 
   f64 p_n[count_stream];
   f64 sun_pn = 0.0;
-  for (u8 idx_stream = 0; idx_stream < count_stream; ++idx_stream) {
-    p_n[idx_stream] =
-        (p0 * std::pow(p, idx_stream + 1)) / math::factorial(idx_stream + 1);
+  for (u64 idx_stream = 0; idx_stream < count_stream; ++idx_stream) {
+    auto factirial = static_cast<double>(math::factorial(idx_stream + 1));
+    auto pow = std::pow(p, static_cast<double>(idx_stream + 1));
+
+    p_n[idx_stream] = (p0 * pow) / factirial;
     sun_pn += p_n[idx_stream];
 
     m_logger->WriteLine("p" + QString::number(idx_stream + 1) + " = " +
                         QString::number(p_n[idx_stream]));
   }
 
-  m_logger->WriteLine("Сумма pn = " + QString::number(sun_pn));
+  m_logger->WriteLine("Сумма pn = " + QString::number(sun_pn + p0));
 
   m_logger->WriteLine("Вероятность отказа = " +
                       QString::number(p_n[count_stream - 1] * 100) + "%");
@@ -111,9 +114,7 @@ void MainWindow::StartDecision() {
   m_logger->WriteLine("В системе заявка в среднем находится = " +
                       QString::number(t_sist) + " мин.");
 
-  m_logger->WriteLine(
-      "Высокой вероятности отказа, загруженность АТС составляет около " +
-      QString::number(k / count_stream * 100) + "% линий связи");
-
-
+  m_logger->WriteLine("Загруженность АТС составляет около " +
+                      QString::number(k / count_stream * 100) +
+                      "% линий связи");
 }

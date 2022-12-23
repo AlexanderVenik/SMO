@@ -22,6 +22,6 @@ QString field::InputField::GetText() const {
   return m_field->text();
 }
 
-void field::InputField::SetText(const QString&& data) const {
+void field::InputField::SetText(const QString& data) const {
   m_field->setText(data);
 }

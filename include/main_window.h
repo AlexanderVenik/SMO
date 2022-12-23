@@ -12,14 +12,18 @@
 class MainWindow : public QWidget {
   Q_OBJECT
  public:
-  explicit MainWindow(QWidget* parent = nullptr);
+  explicit MainWindow(QApplication& app);
   ~MainWindow() override;
 
  private slots:
   void StartDecision();
 
  private:
+  // app
+  QApplication& m_app;
+  // layout
   QVBoxLayout* m_vbox;
+  // logger
   logger::Logger* m_logger;
   // line edit
   // заявок в минуту (лямбда)

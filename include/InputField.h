@@ -15,7 +15,7 @@ class InputField : public QWidget {
 
   QFormLayout* GetLayout() const;
   QString GetText() const;
-  void SetText(const QString&& data) const;
+  void SetText(const QString& data) const;
 
  private:
   QFormLayout* m_layout;

@@ -6,7 +6,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set(CMAKE_PREFIX_PATH "D:/Soft/Qt/6.2.4/msvc2019_64")
+set(CMAKE_PREFIX_PATH "D:\\soft\\Qt\\6.2.4\\mingw_64")
 
 find_package(Qt6 COMPONENTS
         Core
